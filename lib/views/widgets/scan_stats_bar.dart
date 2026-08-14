@@ -30,42 +30,55 @@ class ScanStatsBar extends StatelessWidget {
           child: ValueListenableBuilder<ScanStatistics>(
             valueListenable: viewModel.statsNotifier,
             builder: (context, stats, _) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Discovered count
-                  _buildMetric(
-                    context,
-                    icon: Icons.check_circle_outline,
-                    label: 'Discovered',
-                    value: '${stats.totalDiscovered}',
-                    color: theme.colorScheme.primary,
-                  ),
-                  // Queried types count
-                  _buildMetric(
-                    context,
-                    icon: Icons.radar,
-                    label: 'Protocols',
-                    value: '${stats.typesScanned}',
-                    color: theme.colorScheme.secondary,
-                  ),
-                  // Raw packets count
-                  _buildMetric(
-                    context,
-                    icon: Icons.swap_vert,
-                    label: 'Packets',
-                    value: '${stats.packetsReceived}',
-                    color: theme.colorScheme.tertiary,
-                  ),
-                  // Elapsed time
-                  _buildMetric(
-                    context,
-                    icon: Icons.timer_outlined,
-                    label: 'Duration',
-                    value: _formatDuration(stats.duration),
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ],
+              return FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Discovered count
+                    _buildMetric(
+                      context,
+                      icon: Icons.check_circle_outline,
+                      label: 'Discovered',
+                      value: '${stats.totalDiscovered}',
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(
+                      width: 12.0, // 12dp spacing between metric items
+                    ),
+                    // Queried types count
+                    _buildMetric(
+                      context,
+                      icon: Icons.radar,
+                      label: 'Protocols',
+                      value: '${stats.typesScanned}',
+                      color: theme.colorScheme.secondary,
+                    ),
+                    const SizedBox(
+                      width: 12.0, // 12dp spacing between metric items
+                    ),
+                    // Raw packets count
+                    _buildMetric(
+                      context,
+                      icon: Icons.swap_vert,
+                      label: 'Packets',
+                      value: '${stats.packetsReceived}',
+                      color: theme.colorScheme.tertiary,
+                    ),
+                    const SizedBox(
+                      width: 12.0, // 12dp spacing between metric items
+                    ),
+                    // Elapsed time
+                    _buildMetric(
+                      context,
+                      icon: Icons.timer_outlined,
+                      label: 'Duration',
+                      value: _formatDuration(stats.duration),
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ],
+                ),
               );
             },
           ),

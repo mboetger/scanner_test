@@ -71,7 +71,7 @@ class ServiceListView extends StatelessWidget {
   Widget _buildScanningEmptyState(BuildContext context) {
     final theme = Theme.of(context);
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(
           24.0, // 24dp padding for empty state container
         ),
@@ -114,7 +114,7 @@ class ServiceListView extends StatelessWidget {
   Widget _buildIdleEmptyState(BuildContext context) {
     final theme = Theme.of(context);
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(
           32.0, // 32dp spacious padding
         ),
@@ -164,7 +164,7 @@ class ServiceListView extends StatelessWidget {
   Widget _buildErrorState(BuildContext context, String errorMessage) {
     final theme = Theme.of(context);
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(
           24.0, // 24dp padding
         ),

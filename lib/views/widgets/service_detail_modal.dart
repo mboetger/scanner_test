@@ -295,6 +295,7 @@ class ServiceDetailModal extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,
               ),
+              softWrap: true, // Wrap long IP addresses or names across lines
             ),
             if (subtitle != null)
               Text(
@@ -302,6 +303,7 @@ class ServiceDetailModal extends StatelessWidget {
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.outline,
                 ),
+                softWrap: true,
               ),
           ],
         ),
@@ -354,24 +356,27 @@ class ServiceDetailModal extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 6.0, // 6dp padding
-                vertical: 2.0, // 2dp padding
-              ),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(
-                  4.0, // 4dp radius
+            Flexible(
+              flex: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6.0, // 6dp padding
+                  vertical: 2.0, // 2dp padding
                 ),
-              ),
-              child: Text(
-                keyName,
-                style: TextStyle(
-                  fontFamily: 'monospace',
-                  fontSize: 12.0, // 12sp font size
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onPrimaryContainer,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(
+                    4.0, // 4dp radius
+                  ),
+                ),
+                child: Text(
+                  keyName,
+                  style: TextStyle(
+                    fontFamily: 'monospace',
+                    fontSize: 12.0, // 12sp font size
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
                 ),
               ),
             ),
@@ -388,6 +393,7 @@ class ServiceDetailModal extends StatelessWidget {
                       ? theme.colorScheme.onSurface
                       : theme.colorScheme.outline,
                 ),
+                softWrap: true,
               ),
             ),
           ],

@@ -102,7 +102,10 @@ class ServiceCard extends StatelessWidget {
                         // IP & Port Chip
                         _buildBadge(
                           icon: Icons.lan_outlined,
-                          label: '${item.primaryIpAddress}:${item.port}',
+                          label: _formatEndpoint(
+                            item.primaryIpAddress,
+                            item.port,
+                          ),
                           backgroundColor:
                               theme.colorScheme.surfaceContainerHighest,
                           textColor: theme.colorScheme.onSurfaceVariant,
@@ -145,6 +148,12 @@ class ServiceCard extends StatelessWidget {
     );
   }
 
+  static String _formatEndpoint(String ip, int port) {
+    if (ip.isEmpty) return '';
+    final formattedIp = ip.contains(':') ? '[$ip]' : ip;
+    return port > 0 ? '$formattedIp:$port' : formattedIp;
+  }
+
   Widget _buildBadge({
     required IconData icon,
     required String label,
@@ -173,12 +182,16 @@ class ServiceCard extends StatelessWidget {
           const SizedBox(
             width: 4.0, // 4dp spacing between badge icon and text
           ),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11.0, // 11sp small typography for badge label
-              fontWeight: FontWeight.w500,
-              color: textColor,
+          Flexible(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.0, // 11sp small typography for badge label
+                fontWeight: FontWeight.w500,
+                color: textColor,
+              ),
+              maxLines: 1, // 1 max line prevents multi-line badge wrapping
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

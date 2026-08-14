@@ -191,5 +191,95 @@ void main() {
         const Duration(milliseconds: 50), // 50ms pump to settle
       );
     });
+
+    testWidgets('renders services with long IPv6 addresses without RenderFlex overflow exceptions on mobile screen', (tester) async {
+      // Set viewport size to a realistic mobile screen width (360dp width)
+      tester.view.physicalSize = const Size(
+        360.0, // 360 physical pixels width representing standard mobile viewport
+        640.0, // 640 physical pixels height
+      );
+      tester.view.devicePixelRatio = 1.0; // 1.0 device pixel ratio for 1:1 dp mapping
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ScannerScreen(viewModel: viewModel),
+        ),
+      );
+
+      await tester.tap(find.text('Start Scan'));
+      await tester.pump();
+
+      // Emit item with a full IPv6 address and attributes
+      final ipv6Item = MdnsServiceItem(
+        id: 'ipv6-service-1',
+        serviceType: '_http._tcp.local',
+        instanceName: 'IPv6 Node Server',
+        fullyQualifiedDomainName: 'IPv6 Node Server._http._tcp.local',
+        hostTarget: 'node-srv.local',
+        port: 8080, // HTTP port 8080
+        ipv4Addresses: const [],
+        ipv6Addresses: const ['2001:0db8:85a3:0000:0000:8a2e:0370:7334'],
+        txtRecords: const {'model': 'ServerV6', 'mode': 'prod'},
+        discoveredAt: DateTime.now(),
+      );
+
+      mockService.emitItem(ipv6Item);
+
+      await tester.pump(
+        const Duration(milliseconds: 50), // 50ms pump for batch flush
+      );
+
+      // Verify that the card is displayed with formatted IPv6 endpoint badge
+      expect(find.text('IPv6 Node Server'), findsOneWidget);
+      expect(
+        find.text('[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:8080'),
+        findsOneWidget,
+      );
+
+      // Stop scan first to settle progress animations before navigating modal
+      await tester.tap(find.text('Stop Scan'));
+      await tester.pump(
+        const Duration(milliseconds: 50), // 50ms pump to settle
+      );
+
+      // Tap on card to open detail sheet
+      await tester.tap(find.text('IPv6 Node Server'));
+      for (int i = 0; i < 6; i++) {
+        await tester.pump(
+          const Duration(milliseconds: 100), // 100ms step for smooth bottom sheet entrance
+        );
+      }
+
+      // Verify detail modal opened
+      expect(find.text('Service Details'), findsOneWidget);
+      expect(find.text('DNS Resource Records'), findsOneWidget);
+
+      // Scroll modal sheet to reveal the IP address section
+      final modalScrollable = tester.state<ScrollableState>(
+        find.byType(Scrollable).last,
+      );
+      modalScrollable.position.jumpTo(
+        500.0, // 500dp scroll offset down to IP address section
+      );
+      await tester.pump(
+        const Duration(milliseconds: 100), // 100ms pump to layout scrolled content
+      );
+
+      expect(find.text('IPv6 Address'), findsOneWidget);
+      expect(find.text('2001:0db8:85a3:0000:0000:8a2e:0370:7334'), findsOneWidget);
+
+      // Dismiss the bottom sheet
+      Navigator.of(tester.element(find.text('IPv6 Address'))).pop();
+      for (int i = 0; i < 6; i++) {
+        await tester.pump(
+          const Duration(milliseconds: 100), // 100ms step for exit animation
+        );
+      }
+    });
   });
 }
+
